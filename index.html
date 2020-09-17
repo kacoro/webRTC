@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <video id='vi' autoplay stype="width:640px;height:480px;"></video>
+    <script>
+       var video = document.getElementById("vi");
+       var socket;
+        function draw(){
+            //js bom模型
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||navigator.msGetUserMedia;
+            navigator.getUserMedia({video:true,audio:true},success,console.log)
+    
+        }
+        var success = function(stream){
+            video.src = window.URL.createObjectURL(stream)
+        }
+        draw()
+    </script>
+</body>
+</html>
