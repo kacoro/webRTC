@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="WebRTC demo1">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>getUserMedia</title>
+</head>
+<body>
+ 
+  <div id="container">
+    <video id="video" autoplay playsinline></video>
+    <button id="showVideo">Open camera</button>
+    <div id="errorMsg"></div>
+  </div>
+ 
+<script type="text/javascript">
+const constraints = { audio: false, video: true };
+ 
+function handleSuccess(stream) {
+  video = document.querySelector('video');
+  video.srcObject = stream;
+}
+ 
+function handleError(error) {
+  if (error.name === 'ConstraintNotSatisfiedError') {
+    let v = constraints.video;
+    errorMsg(`The resolution ${v.width.exact}x${v.height.exact} px is not supported by your device.`);
+  } else if (error.name === 'PermissionDeniedError' || error.name === 'NotAllowedError') {
+    errorMsg('拒绝了授权访问该设备');
+  } else {
+    errorMsg(`getUserMedia error: ${error.name}`, error);
+  }
+}
+ 
+function errorMsg(msg, error) {
+  const errorElement = document.querySelector('#errorMsg');
+  errorElement.innerHTML += `<p>${msg}</p>`;
+  if (typeof error !== 'undefined') {
+    console.error(error);
+  }
+}
+ 
+async function init(e) {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    handleSuccess(stream);
+    e.target.disabled = true;
+  } catch (e) {
+    handleError(e);
+  }
+}
+ 
+document.querySelector('#showVideo').addEventListener('click', e => init(e));
+</script>
+</body>
+</html>
